@@ -1,7 +1,9 @@
-package basic;
+package basic.container;
 
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,7 +29,7 @@ public class VBoxExample extends Application{
 		ImageView iv=new ImageView();
 		iv.setFitWidth(200.0);
 		iv.setPreserveRatio(true);
-		iv.setImage(new Image("/basic/images/다운로드.JPG"));
+		iv.setImage(new Image("/images/fruit1.jpg"));
 		
 		HBox hbox=new HBox();
 		hbox.setAlignment(Pos.CENTER);
@@ -41,6 +43,34 @@ public class VBoxExample extends Application{
 		hbox.getChildren().add(btnPrev);
 		hbox.getChildren().add(btnNext);
 		VBox.setMargin(hbox, new Insets(10));
+		//이벤트 핸들러를 해당 컨트롤에 등록.
+		
+		btnPrev.setOnAction(new EventHandler<ActionEvent>() {
+			int i=1;
+
+			@Override
+			public void handle(ActionEvent ae) {
+				if(i==0) {
+					i=9;
+				}
+				iv.setImage(new Image("/images/fruit"+i-- +".jpg"));
+				
+			}
+			
+		});
+		btnNext.setOnAction(new EventHandler<ActionEvent>() {
+			int i=1;
+
+			@Override
+			public void handle(ActionEvent ae) {
+				if(i==10) {
+					i=1;
+				}
+				iv.setImage(new Image("/images/fruit"+i++ +".jpg"));
+				
+			}
+			
+		});
 		
 		root.getChildren().add(iv);
 		root.getChildren().add(hbox);
