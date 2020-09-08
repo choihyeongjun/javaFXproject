@@ -24,10 +24,10 @@ public class Student {
 	public String getName() {
 		return name.get();
 	}
-	public void setid(int id) {
+	public void setId(int id) {
 		this.id.set(id);
 	}
-	public int getid() {
+	public int getId() {
 		return id.get();
 	}
 	public void setName(String name) {

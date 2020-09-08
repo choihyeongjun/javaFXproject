@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+fx:controller="project.RootController">
+   <children>
+      <Pane layoutX="-71.0" layoutY="-156.0" prefHeight="510.0" prefWidth="441.0">
+         <children>
+            <Label layoutX="203.0" layoutY="200.0" text="헬스 일기">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <Button  fx:id="btnAdd1" layoutX="169.0" layoutY="450.0" mnemonicParsing="false" text="로그인" />
+            <Button fx:id="btnAdd2" layoutX="295.0" layoutY="450.0" mnemonicParsing="false" text="회원가입" />
+            <Text layoutX="181.0" layoutY="310.0" strokeType="OUTSIDE" strokeWidth="0.0" text="  작심3일   NO!!     작심 30일 Good!!" wrappingWidth="164.12109375">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

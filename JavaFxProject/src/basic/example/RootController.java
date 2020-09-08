@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import com.yedam.database.DBConnection;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -95,8 +97,8 @@ public class RootController implements Initializable{
 				// TODO Auto-generated method stub
 				System.out.println(event);
 				if(event.getClickCount()==2) {
-					String selectedName=tableView.getSelectionModel().getSelectedItem().getName();
-					handleDoubleClickAction(selectedName);
+					int selectedId=tableView.getSelectionModel().getSelectedItem().getId();
+					handleDoubleClickAction(selectedId);
 					
 				}
 			}
@@ -104,19 +106,24 @@ public class RootController implements Initializable{
 		});
 		
 	}//end of 초기화
-	public void handleDoubleClickAction(String name) {
+	public void handleDoubleClickAction(int id) {
 		Stage stage=new Stage(StageStyle.UTILITY);
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.initOwner(primaryStage);
 		
 		AnchorPane ap=new AnchorPane();
 		ap.setPrefSize(210,230);
-		Label lid,lKorean,lMath,lEnglish;
+		Label lid,lKorean,lMath,lEnglish,lname;
 		TextField tid,tName,tKorean,tMath,tEnglish;
+		
+		lname=new Label("이름");
+		lname.setLayoutX(35);
+		lname.setLayoutY(45);
+		
 		
 		lid=new Label("아이디");
 		lid.setLayoutX(35);
-		lid.setLayoutY(55);
+		lid.setLayoutY(20);
 		
 		lKorean=new Label("국어");
 		lKorean.setLayoutX(35);
@@ -136,12 +143,14 @@ public class RootController implements Initializable{
 		tid.setLayoutX(72);
 		tid.setLayoutY(15);
 		
+		
+		
 		tName=new TextField();
 		tName.setPrefWidth(110);
 		tName.setLayoutX(72);
-		tName.setLayoutY(30);
+		tName.setLayoutY(43);
 		
-		tName.setText(name);
+		//tName.setText();
 		tName.setEditable(false);
 		
 		tKorean=new TextField();
@@ -168,6 +177,10 @@ public class RootController implements Initializable{
 			public void handle(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				if(arg0.getClickCount()==1) {
+				
+					
+					
+					
 					stage.close();
 				}
 			}
@@ -175,31 +188,57 @@ public class RootController implements Initializable{
 		});
 		
 		btnUpdate.setOnAction(new EventHandler<ActionEvent>() {
-
+			Connection conn=DBConnection.getConnection();
+			
+			
 			@Override
 			public void handle(ActionEvent event) {
-				for(int i=0;i<list.size();i++) {
-					if(list.get(i).getName().equals(name)) {
-						Student student=new Student(Integer.parseInt(tid.getText()),name,Integer.parseInt(tKorean.getText()),
-								Integer.parseInt(tMath.getText()),
-								Integer.parseInt(tEnglish.getText()));
+				 {
+					{
+						for(int i=0;i<list.size();i++) {
+							if(list.get(i).getId()==id) {
+								Student student=new Student(id,tName.getText(),Integer.parseInt(tKorean.getText()),
+										Integer.parseInt(tMath.getText()),Integer.parseInt(tEnglish.getText()));
+								
+								list.set(i,student);
+							}
+						}
 						
-						list.set(i,student);
+						
+						
+						
+						String sql="update new_st set "
+								+"korean="+Integer.parseInt(tKorean.getText())+","+
+								"math="+Integer.parseInt(tMath.getText())+","+"english="+Integer.parseInt(tEnglish.getText())
+								+" where id="+tid.getText();
+						System.out.println(sql);
+						try {
+							PreparedStatement psmt=conn.prepareStatement(sql);
+							int r=psmt.executeUpdate();
+							System.out.println(r+"건 입력되었습니다");
+							
+						}
+						catch(SQLException e) {
+							e.printStackTrace();
+						}
+								
+					
 					}
 				}
 			}
 		});
 		//이름 기준으로 국어점수 ,수학,영어 화면에 입력해주기
 		for(Student stu:list) {
-			if(stu.getName().equals(name)) {
-				tid.setText(String.valueOf(stu.getid()));
+			if(stu.getId()==id) {
+				tid.setText(String.valueOf(id));
+				tName.setText(String.valueOf(stu.getName()));
 				tMath.setText(String.valueOf(stu.getMath()));
 				tKorean.setText(String.valueOf(stu.getKorean()));
 				tEnglish.setText(String.valueOf(stu.getEnglish()));
 			}
 		}
 		
-		ap.getChildren().addAll(btnUpdate,tid,tName,tKorean,tMath,tEnglish,lid,lKorean,lMath,lEnglish);
+		ap.getChildren().addAll(btnUpdate,tid,tName,tKorean,tMath,tEnglish,lname,lid,lKorean,lMath,lEnglish);
 		Scene scene=new Scene(ap);
 		stage.setScene(scene);
 		stage.show();
@@ -218,7 +257,7 @@ public class RootController implements Initializable{
 					rs.getInt("Korean"),rs.getInt("English"),
 					rs.getInt("Math"));
 			int id=rs.getInt("id");
-			st.setid(id);
+			st.setId(id);
 			String name=rs.getString("name");
 			st.setName(name);
 			int Korean=rs.getInt("Korean");
